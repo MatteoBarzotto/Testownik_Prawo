@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Testownik Prawo Nowych Technologii</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+      color: #1e3a8a;
+    }
+    #question {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .correct {
+      background-color: #c6f6d5 !important;
+    }
+    .wrong {
+      background-color: #feb2b2 !important;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Testownik - Prawo Nowych Technologii</h1>
+  <div id="quiz">
+    <div id="question">Ładowanie...</div>
+    <div id="options"></div>
+    <div id="result"></div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script>
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const resultEl = document.getElementById('result');
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        questionEl.textContent = "Koniec testu!";
+        optionsEl.innerHTML = "";
+        resultEl.textContent = `Twój wynik: ${score} / ${questions.length}`;
+        return;
+      }
+
+      const q = questions[current];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.textContent = `${String.fromCharCode(65 + idx)}. ${opt}`;
+        btn.onclick = () => handleAnswer(idx, q.answer, btn);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selected, correct, button) {
+      const buttons = document.querySelectorAll('.option');
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selected === correct) {
+        button.classList.add('correct');
+        score++;
+      } else {
+        button.classList.add('wrong');
+        buttons[correct].classList.add('correct');
+      }
+
+      setTimeout(() => {
+        current++;
+        showQuestion();
+      }, 1000);
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
